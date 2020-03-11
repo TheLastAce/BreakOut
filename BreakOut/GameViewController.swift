@@ -11,15 +11,20 @@ import SpriteKit
 import GameplayKit
 
 class GameViewController: UIViewController {
+    
+    var ball = SKShapeNode()
+    var paddle = SKSpriteNode()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        makeBall()
+        makePaddle()
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             if let scene = SKScene(fileNamed: "GameScene") {
                 // Set the scale mode to scale to fit the window
-                scene.scaleMode = .aspectFill
+                scene.scaleMode = .resizeFill
                 
                 // Present the scene
                 view.presentScene(scene)
@@ -44,7 +49,38 @@ class GameViewController: UIViewController {
         }
     }
 
-    override var prefersStatusBarHidden: Bool {
-        return true
+    func makeBall() {
+        ball = SKShapeNode(circleOfRadius: 10)
+        ball.position = CGPoint(x: frame.midX, y: frame.midY)
+        ball.strokeColor = .black
+        ball.fillColor = .yellow
+        ball.name = "ball"
+        
+        //physica shape matches ball image
+        ball.physicsBody = SKPhysicsBody(circleOfRadius: 10)
+        // ignores all forces and impulses
+        ball.physicsBody?.isDynamic = false
+        //use precise collision detection
+        ball.physicsBody?.usesPreciseCollisionDetection = true
+        // no loss of energy from friction
+        ball.physicsBody?.friction = 0
+        // gravity is not a factor
+        ball.physicsBody?.affectedByGravity = false
+        //ball bounces fully off other objects
+        ball.physicsBody?.restitution = 1
+        //does not slow down over time
+        ball.physicsBody?.linearDamping = 0
+        ball.physicsBody?.contactTestBitMask = (ball.physicsBody?.collisionBitMask)!
+        
+        addChild(ball) //add ball object to the view
+        
+    }
+    func makePaddle() {
+        paddle = SKSpriteNode(color: .white, size: CGSize(width: frame.width/4, height: 20))
+        paddle.position = CGPoint(x: frame.midX, y: frame.midY + 125)
+        paddle.name = "paddle"
+        paddle.physicsBody = SKPhysicsBody(rectangleOf: paddle.size)
+        paddle.physicsBody?.isDynamic = false
+        addChild(paddle)
     }
 }
