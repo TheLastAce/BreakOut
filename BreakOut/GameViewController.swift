@@ -14,11 +14,13 @@ class GameViewController: UIViewController {
     
     var ball = SKShapeNode()
     var paddle = SKSpriteNode()
+    var brick = SKSpriteNode()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         makeBall()
         makePaddle()
+        makeBrick()
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -83,4 +85,13 @@ class GameViewController: UIViewController {
         paddle.physicsBody?.isDynamic = false
         addChild(paddle)
     }
+    func makeBrick() {
+        brick = SKSpriteNode(color: .blue, size: CGSize(width: 50, height: 20))
+        brick.position = CGPoint(x: frame.midX, y: frame.maxY - 100)
+        brick.name = "brick"
+        brick.physicsBody = SKPhysicsBody(rectangleOf: brick.size)
+        brick.physicsBody?.isDynamic = false
+        addChild(brick)
+    }
+    
 }
