@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var ball = SKShapeNode()
     var paddle = SKSpriteNode()
@@ -21,6 +21,11 @@ class GameScene: SKScene {
         makeBall()
         makePaddle()
         makeBrick()
+        makeLoseZone()
+        physicsWorld.contactDelegate = self
+        self.physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
+        ball.physicsBody?.isDynamic = true
+        ball.physicsBody?.applyImpulse(CGVector(dx: 3, dy: 5))
         
     }
     
@@ -65,14 +70,16 @@ class GameScene: SKScene {
         addChild(ball) //add ball object to the view
         
     }
+    
     func makePaddle() {
         paddle = SKSpriteNode(color: .white, size: CGSize(width: frame.width/4, height: 20))
-        paddle.position = CGPoint(x: frame.midX, y: frame.midY + 125)
+        paddle.position = CGPoint(x: frame.midX, y: frame.minY + 125)
         paddle.name = "paddle"
         paddle.physicsBody = SKPhysicsBody(rectangleOf: paddle.size)
         paddle.physicsBody?.isDynamic = false
         addChild(paddle)
     }
+    
     func makeBrick() {
         brick = SKSpriteNode(color: .blue, size: CGSize(width: 50, height: 20))
         brick.position = CGPoint(x: frame.midX, y: frame.maxY - 100)
@@ -81,6 +88,7 @@ class GameScene: SKScene {
         brick.physicsBody?.isDynamic = false
         addChild(brick)
     }
+    
     func makeLoseZone() {
         loseZone = SKSpriteNode(color: .red, size: CGSize(width: frame.width, height: 50))
         loseZone.position = CGPoint(x: frame.midX, y: frame.minY + 25)
